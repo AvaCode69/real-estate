@@ -244,6 +244,9 @@ article {
   width: 90vw;
   margin: 0 auto;
   max-width: var(--max-width);
+  a {
+    color: #585656 !important;
+  }
   .single-list {
     padding: 1rem 1.5rem;
     border: 2px solid #e1e7ef;
@@ -251,17 +254,16 @@ article {
     box-shadow: 0 10px 15px -3px #0000001a;
     margin-top: 1.4rem;
     background: #fff;
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
     gap: 0.5rem;
+    display: grid;
+    grid-template-columns: 1fr 20fr 1fr;
+    align-items: flex-start;
     &-info {
       display: flex;
-      justify-content: center;
-      align-items: center;
+      justify-content: flex-start;
       gap: 0.5rem;
       h5 {
-        color: #585656;
+        color: #585656 !important;
       }
       p {
         color: #747373;
@@ -278,6 +280,17 @@ article {
       }
       .price {
         color: #333 !important;
+      }
+    }
+    &-modify {
+      color: #686868;
+      svg {
+        margin-left: 0.4rem;
+      }
+      .remove-btn {
+        cursor: pointer;
+        border: medium none transparent;
+        background: transparent;
       }
     }
   }

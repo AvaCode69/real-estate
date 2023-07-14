@@ -8,6 +8,7 @@ import {
   GET_LISTS_BEGIN,
   GET_LISTS_SUCCESS,
   GET_LISTS_ERROR,
+  REMOVE_LIST_ITEM,
   GET_SINGLE_PRODUCT_BEGIN,
   GET_SINGLE_PRODUCT_SUCCESS,
   GET_SINGLE_PRODUCT_ERROR,
@@ -31,14 +32,27 @@ export const ListsProvider = ({ children }) => {
   const closeSidebar = () => {
     dispatch({ type: SIDEBAR_CLOSE });
   };
+
+  const removeItem = async (id) => {
+    try {
+      const response = await axios.delete(
+        `https://64b18130062767bc48264d85.mockapi.io/api/house/house/${id}`
+      ); // Make the delete request to the server
+      if (response.status === 200) {
+        dispatch({ type: REMOVE_LIST_ITEM, payload: id }); // Update the local state
+      }
+    } catch (error) {
+      console.log("Error removing item:", error);
+    }
+  };
+
   const fetchLists = async (url) => {
     dispatch({ type: GET_LISTS_BEGIN });
 
-    const headers = {
-      "X-Api-Key": apiKey,
-    };
     try {
-      const response = await axios.get(url, { headers });
+      const response = await axios.get(
+        "https://64b18130062767bc48264d85.mockapi.io/api/house/house"
+      );
       const lists = response.data;
       console.log(lists); // Access the actual data
       dispatch({ type: GET_LISTS_SUCCESS, payload: lists });
@@ -46,18 +60,19 @@ export const ListsProvider = ({ children }) => {
       dispatch({ type: GET_LISTS_ERROR });
     }
   };
+
   useEffect(() => {
     fetchLists(url);
-  }, []);
+  }, []); // Empty dependency array
+
   return (
     <ListsContext.Provider
-      value={{ ...state, openSidebar, closeSidebar, fetchLists }}
+      value={{ ...state, removeItem, openSidebar, closeSidebar, fetchLists }}
     >
       {children}
     </ListsContext.Provider>
   );
 };
-
 export const useListsContext = () => {
   return useContext(ListsContext);
 };

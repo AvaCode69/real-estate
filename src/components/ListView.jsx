@@ -2,45 +2,68 @@ import React from "react";
 import { Link } from "react-router-dom";
 import {} from "react-icons/fa";
 import { FaShower, FaBed, FaRuler, FaTrash, FaEdit } from "react-icons/fa";
+import { useListsContext } from "../context/lists_context";
 
 const ListView = ({ lists }) => {
+  const { removeItem } = useListsContext();
   return (
     <div>
       {lists.map((item) => {
-        const { id, image, price, description, size, location, rooms } = item;
+        const {
+          id,
+          image,
+          price,
+          description,
+          size,
+          street,
+          zip,
+          city,
+          bedrooms,
+          bathrooms,
+        } = item;
         return (
           <section className="lists">
-            <Link to={`/lists/${id}`} className=" ">
-              <article className="single-list" key={id}>
-                <img src={image} />
-                <div>
-                  <h5>{location.street}</h5>
-                  <p className="price">€{price}</p>
-                  <p className="location">
-                    {location.zip}
-                    {location.city}
+            <article className="single-list" key={id}>
+              <Link to={`/lists/${id}`} className=" ">
+                <img src={image} />{" "}
+              </Link>
+              <div>
+                <h5>{street}</h5>
+                <p className="price">€{price}</p>
+                <p className="location">
+                  {zip}
+                  {city}
+                </p>
+                <div className="single-list-info">
+                  <p>
+                    <FaBed />
+                    {bedrooms}{" "}
                   </p>
-                  <div className="single-list-info">
-                    <p>
-                      <FaBed />
-                      {rooms.bedrooms}{" "}
-                    </p>
-                    <p>
-                      <FaShower />
-                      {rooms.bathrooms}
-                    </p>
-                    <p>
-                      <FaRuler />
-                      {size} m2
-                    </p>
-                  </div>
-                  <div>
-                    <FaTrash />
-                    <FaEdit />
-                  </div>
+                  <p>
+                    <FaShower />
+                    {bathrooms}
+                  </p>
+                  <p>
+                    <FaRuler />
+                    {size} m2
+                  </p>
                 </div>
-              </article>
-            </Link>
+              </div>
+              <div className="single-list-modify">
+                <button
+                  type="button"
+                  className="remove-btn"
+                  onClick={() => {
+                    console.log("Removing item with ID2:", id);
+                    removeItem(id);
+                  }}
+                >
+                  {" "}
+                  <FaTrash />{" "}
+                </button>
+                <FaEdit />
+              </div>
+            </article>
           </section>
         );
       })}
