@@ -31,8 +31,7 @@ const ListView = ({ lists }) => {
                 <h5>{street}</h5>
                 <p className="price">€{price}</p>
                 <p className="location">
-                  {zip}
-                  {city}
+                  {zip} {city}
                 </p>
                 <div className="single-list-info">
                   <p>

@@ -13,6 +13,5 @@ export const links = [
   },
 ];
 
-export const post_url = "https://api.intern.d-tt.nl/api/houses";
-
-export const single_product_url = `https://course-api.com/react-store-single-product?id=`;
+export const post_url =
+  "https://64b18130062767bc48264d85.mockapi.io/api/house/house";

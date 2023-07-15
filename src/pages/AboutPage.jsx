@@ -1,6 +1,6 @@
 const AboutPage = () => {
   return (
-    <main>
+    <section className="main">
       <article>
         <div className="title">
           <h2>About Divar real eState</h2>
@@ -18,7 +18,7 @@ const AboutPage = () => {
           including versions of Lorem Ipsum.
         </p>
       </article>
-    </main>
+    </section>
   );
 };
 

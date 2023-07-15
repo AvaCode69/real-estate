@@ -2,9 +2,9 @@ import React from "react";
 
 const Loading = () => {
   return (
-    <div className="section section-center">
+    <section className="main">
       <div className="loading"></div>
-    </div>
+    </section>
   );
 };
 

@@ -9,18 +9,18 @@ import {
   GET_LISTS_SUCCESS,
   GET_LISTS_ERROR,
   REMOVE_LIST_ITEM,
-  GET_SINGLE_PRODUCT_BEGIN,
+  ADD_TO_LIST,
   GET_SINGLE_PRODUCT_SUCCESS,
   GET_SINGLE_PRODUCT_ERROR,
 } from "../actions";
 
 const initialState = {
   isSidebarOpen: false,
-  lists_loading: false,
+  lists_loading: true,
   lists_error: false,
   lists: [],
+  error: "",
 };
-const apiKey = "gj3cfCPirnAEWk-JKhGtb85yX61I04O2";
 const ListsContext = React.createContext(initialState);
 
 export const ListsProvider = ({ children }) => {
@@ -35,9 +35,7 @@ export const ListsProvider = ({ children }) => {
 
   const removeItem = async (id) => {
     try {
-      const response = await axios.delete(
-        `https://64b18130062767bc48264d85.mockapi.io/api/house/house/${id}`
-      ); // Make the delete request to the server
+      const response = await axios.delete(`${url}/${id}`); // Make the delete request to the server
       if (response.status === 200) {
         dispatch({ type: REMOVE_LIST_ITEM, payload: id }); // Update the local state
       }
@@ -50,9 +48,7 @@ export const ListsProvider = ({ children }) => {
     dispatch({ type: GET_LISTS_BEGIN });
 
     try {
-      const response = await axios.get(
-        "https://64b18130062767bc48264d85.mockapi.io/api/house/house"
-      );
+      const response = await axios.get(url);
       const lists = response.data;
       console.log(lists); // Access the actual data
       dispatch({ type: GET_LISTS_SUCCESS, payload: lists });

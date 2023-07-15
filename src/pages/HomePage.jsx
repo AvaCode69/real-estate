@@ -1,10 +1,20 @@
-import { HouseList } from "../components";
+import { HouseList, Loading, Error } from "../components";
+import { Link } from "react-router-dom";
+import { useListsContext } from "../context/lists_context";
 const HomePage = () => {
+  const { lists_loading: loading, lists_error: error } = useListsContext();
+  if (loading) {
+    console.log("loading");
+    return <Loading />;
+  }
+  if (error) {
+    return <Error />;
+  }
   return (
     <main>
       <section className="header-list ">
         <h2>Houses </h2>
-        <Link to="/cart" className="cart-btn" onClick={closeSidebar}>
+        <Link to="/addItem" className="cart-btn">
           <button className="btn">+ Create new </button>
         </Link>
       </section>
