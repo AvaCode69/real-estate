@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import axios from "axios";
 import { post_url as url } from "../utils/constants";
 import { useListsContext } from "../context/lists_context";
-
+import { FiPlus } from "react-icons/fi";
 const AddItem = () => {
   const { setFormData, formData, validateForm, invalidFields } =
     useListsContext();
@@ -153,15 +153,21 @@ const AddItem = () => {
             className={getFieldClassName("city")}
           />
         </label>
-        <label>
+        <label className="upload-label">
           Upload Images:
-          <input
-            type="file"
-            name="images"
-            multiple
-            accept="image/jpeg, image/png"
-            onChange={handleImageChange}
-          />
+          <div className="upload-container">
+            <input
+              type="file"
+              name="images"
+              multiple
+              accept="image/jpeg, image/png"
+              onChange={handleImageChange}
+              className="upload-input"
+            />
+            <div className="upload-icon-container">
+              <FiPlus className="upload-icon" />
+            </div>
+          </div>
         </label>
         <label>
           Construction Year:
