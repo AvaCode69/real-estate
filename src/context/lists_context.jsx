@@ -10,8 +10,9 @@ import {
   GET_LISTS_ERROR,
   REMOVE_LIST_ITEM,
   ADD_TO_LIST,
-  GET_SINGLE_PRODUCT_SUCCESS,
-  GET_SINGLE_PRODUCT_ERROR,
+  GET_SINGLE_ITEM_SUCCESS,
+  GET_SINGLE_ITEM_ERROR,
+  GET_SINGLE_ITEM_BEGIN,
 } from "../actions";
 
 const initialState = {
@@ -19,6 +20,9 @@ const initialState = {
   lists_loading: true,
   lists_error: false,
   lists: [],
+  single_item_loading: false,
+  single_item_error: false,
+  single_item: {},
 };
 const ListsContext = React.createContext(initialState);
 
@@ -63,14 +67,27 @@ export const ListsProvider = ({ children }) => {
     dispatch({ type: GET_LISTS_BEGIN });
 
     try {
-      const response = await axios.get(url);
+      const response = await axios.get(url, {
+        method: "GET",
+        headers: { "content-type": "application/json" },
+      });
       const lists = response.data;
       dispatch({ type: GET_LISTS_SUCCESS, payload: lists });
     } catch (error) {
       dispatch({ type: GET_LISTS_ERROR });
     }
   };
-
+  const fetchSingleItem = async (url) => {
+    dispatch({ type: GET_SINGLE_ITEM_BEGIN });
+    const response = await axios.get(url);
+    const singleItem = response.data;
+    console.log(singleItem);
+    try {
+      dispatch({ type: GET_SINGLE_ITEM_SUCCESS, payload: singleItem });
+    } catch {
+      dispatch({ type: GET_SINGLE_ITEM_ERROR });
+    }
+  };
   const validateForm = () => {
     const requiredFields = [
       "price",
@@ -115,7 +132,7 @@ export const ListsProvider = ({ children }) => {
         openSidebar,
         closeSidebar,
         fetchLists,
-
+        fetchSingleItem,
         invalidFields,
         validateForm,
         formData,

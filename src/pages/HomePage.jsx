@@ -1,10 +1,9 @@
-import { HouseList, Loading, Error } from "../components";
+import { ItemList, Loading, Error } from "../components";
 import { Link } from "react-router-dom";
 import { useListsContext } from "../context/lists_context";
 const HomePage = () => {
   const { lists_loading: loading, lists_error: error } = useListsContext();
   if (loading) {
-    console.log("loading");
     return <Loading />;
   }
   if (error) {
@@ -18,7 +17,7 @@ const HomePage = () => {
           <button className="btn">+ Create new </button>
         </Link>
       </section>
-      <HouseList />
+      <ItemList />
     </main>
   );
 };

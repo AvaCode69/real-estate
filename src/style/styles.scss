@@ -130,6 +130,11 @@ p {
     line-height: 1;
   }
 }
+@mixin widthStyles {
+  width: 90vw;
+  margin: 0 auto;
+  max-width: var(--max-width);
+}
 .loading {
   width: 6rem;
   height: 6rem;
@@ -151,9 +156,7 @@ p {
     -moz-box-align: center;
     align-items: center;
     background: #fff;
-    width: 90vw;
-    margin: 0 auto;
-    max-width: var(--max-width);
+    @include widthStyles;
     .nav-header {
       display: flex;
       align-items: center;
@@ -231,9 +234,8 @@ article {
   grid-template-columns: 1fr auto;
   -moz-box-align: center;
   align-items: center;
-  width: 90vw;
-  margin: 0 auto;
-  max-width: var(--max-width);
+  @include widthStyles;
+
   margin-top: 1.4rem;
 }
 .btn {
@@ -252,9 +254,8 @@ article {
   transition: all 0.3s linear;
 }
 .lists {
-  width: 90vw;
-  margin: 0 auto;
-  max-width: var(--max-width);
+  @include widthStyles;
+
   a {
     color: #585656 !important;
   }
@@ -311,7 +312,7 @@ article {
   grid-template-columns: repeat(2, 1fr);
   gap: 1rem;
   max-width: 500px;
-  margin: 0 auto;
+  margin: 0 auto auto 0;
   margin-top: 1.4rem;
   label {
     display: flex;
@@ -367,10 +368,14 @@ article {
   min-height: calc(100vh - 10rem);
   padding: 5rem 0;
 }
-.main {
+.main,
+.container {
   text-align: center;
   min-height: calc(100vh - 10rem);
   padding: 5rem 0;
+}
+.wrap {
+  @include widthStyles;
 }
 .invalid {
   border: 2px solid red !important;
@@ -388,8 +393,9 @@ article {
   padding: 20px;
 }
 
-.upload-input {
-  display: none;
+.upload-input,
+.hidden {
+  display: none !important ;
 }
 
 .upload-icon-container {
@@ -406,4 +412,14 @@ article {
 .upload-icon {
   color: #fff;
   font-size: 24px;
+}
+.container {
+  background: url("/src/images/img_background3x.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+}
+.image-preview img {
+  width: 150px;
+  height: auto;
 }

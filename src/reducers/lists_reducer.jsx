@@ -6,6 +6,9 @@ import {
   GET_LISTS_SUCCESS,
   GET_LISTS_ERROR,
   REMOVE_LIST_ITEM,
+  GET_SINGLE_ITEM_SUCCESS,
+  GET_SINGLE_ITEM_ERROR,
+  GET_SINGLE_ITEM_BEGIN,
 } from "../actions";
 
 const lists_reducer = (state, action) => {
@@ -14,6 +17,12 @@ const lists_reducer = (state, action) => {
   }
   if (action.type === SIDEBAR_CLOSE) {
     return { ...state, isSidebarOpen: false };
+  }
+  if (action.type === REMOVE_LIST_ITEM) {
+    const newList = state.lists.filter((item) => item.id !== action.payload);
+    console.log("Removing item with ID3:", newList);
+
+    return { ...state, lists: newList };
   }
   if (action.type === GET_LISTS_BEGIN) {
     return { ...state, lists_loading: true };
@@ -29,13 +38,24 @@ const lists_reducer = (state, action) => {
     return { ...state, lists_loading: false, lists_error: true };
   }
 
-  if (action.type === REMOVE_LIST_ITEM) {
-    const newList = state.lists.filter((item) => item.id !== action.payload);
-    console.log("Removing item with ID3:", newList);
-
-    return { ...state, lists: newList };
+  if (action.type === GET_SINGLE_ITEM_BEGIN) {
+    return {
+      ...state,
+      single_item_loading: false,
+      single_item_error: false,
+    };
   }
 
+  if (action.type === GET_SINGLE_ITEM_SUCCESS) {
+    return {
+      ...state,
+      lists_loading: false,
+      single_item: action.payload,
+    };
+  }
+  if (action.type === GET_SINGLE_ITEM_ERROR) {
+    return { ...state, single_item_error: false, single_item_loading: true };
+  }
   throw new Error(`No Matching - action type`);
 };
 

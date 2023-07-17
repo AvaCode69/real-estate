@@ -3,9 +3,22 @@ import { Link } from "react-router-dom";
 import {} from "react-icons/fa";
 import { FaShower, FaBed, FaRuler, FaTrash, FaEdit } from "react-icons/fa";
 import { useListsContext } from "../context/lists_context";
+import { post_url as url } from "../utils/constants";
 
 const ListView = ({ lists }) => {
-  const { removeItem } = useListsContext();
+  const {
+    removeItem,
+    lists_loading: loading,
+    lists_error: error,
+  } = useListsContext();
+
+  if (loading) {
+    return <Loading />;
+  }
+  if (error) {
+    return <Error />;
+  }
+
   return (
     <div>
       {lists.map((item) => {
@@ -24,7 +37,7 @@ const ListView = ({ lists }) => {
         return (
           <section className="lists">
             <article className="single-list" key={id}>
-              <Link to={`/lists/${id}`} className=" ">
+              <Link to={`/${id}`} className=" ">
                 <img src={image} />{" "}
               </Link>
               <div>
@@ -53,7 +66,6 @@ const ListView = ({ lists }) => {
                   type="button"
                   className="remove-btn"
                   onClick={() => {
-                    console.log("Removing item with ID2:", id);
                     removeItem(id);
                   }}
                 >

@@ -4,5 +4,15 @@ import Sidebar from "./Sidebar";
 import Services from "./Services";
 import Loading from "./Loading";
 import Error from "./Error";
-import HouseList from "./HouseList";
-export { Navbar, Footer, Sidebar, Services, Loading, Error, HouseList };
+import ItemList from "./ItemList";
+import PageHero from "./PageHero";
+export {
+  Navbar,
+  Footer,
+  Sidebar,
+  Services,
+  Loading,
+  Error,
+  ItemList,
+  PageHero,
+};
