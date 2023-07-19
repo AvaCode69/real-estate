@@ -22,7 +22,7 @@ const lists_reducer = (state, action) => {
     return { ...state, isSidebarOpen: false };
   }
   if (action.type === OPEN_MODAL) {
-    return { ...state, isOpen: true };
+    return { ...state, isOpen: true, modalItemId: action.payload };
   }
   if (action.type === CLOSE_MODAL) {
     return { ...state, isOpen: false };

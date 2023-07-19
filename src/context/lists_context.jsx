@@ -35,6 +35,7 @@ const initialState = {
   postId: "",
   removeMessage: "",
   isOpen: false,
+  modalItemId: null,
 };
 
 const ListsContext = createContext();
@@ -68,14 +69,15 @@ export const ListsProvider = ({ children }) => {
   const closeSidebar = () => {
     dispatch({ type: SIDEBAR_CLOSE });
   };
-  const openModal = () => {
-    dispatch({ type: OPEN_MODAL });
+  const openModal = (id) => {
+    dispatch({ type: OPEN_MODAL, payload: id });
   };
   const closeModal = () => {
     dispatch({ type: CLOSE_MODAL });
   };
 
-  const removeItem = async (id) => {
+  const removeItem = async () => {
+    const id = state.modalItemId;
     try {
       const response = await axios.delete(`${url}/${id}`);
       if (response.status === 200) {

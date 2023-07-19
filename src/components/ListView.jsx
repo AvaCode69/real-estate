@@ -8,7 +8,6 @@ import { ItemList, Loading, Error } from "../components";
 
 const ListView = ({ lists }) => {
   const {
-    removeItem,
     lists_loading: loading,
     lists_error: error,
     removeMessage,
@@ -69,7 +68,7 @@ const ListView = ({ lists }) => {
                 type="button"
                 className="remove-btn"
                 onClick={() => {
-                  openModal();
+                  openModal(id);
                 }}
               >
                 {" "}
