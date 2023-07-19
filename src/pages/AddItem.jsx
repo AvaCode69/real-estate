@@ -3,14 +3,23 @@ import axios from "axios";
 import { post_url as url } from "../utils/constants";
 import { useListsContext } from "../context/lists_context";
 import { FiPlus, FiX } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
+import { Loading } from "../components";
 
 const AddItem = () => {
-  const { setFormData, formData, validateForm, invalidFields } =
-    useListsContext();
-  const [message, setMessage] = useState("");
-  const [selectedFiles, setSelectedFiles] = useState([]);
-  const [imageURLs, setImageURLs] = useState([]);
-
+  const {
+    setFormData,
+    formData,
+    validateForm,
+    invalidFields,
+    fetchLists,
+    addToList,
+    imageURLs,
+    setImageURLs,
+    addMessage,
+    single_item,
+  } = useListsContext();
+  const navigate = useNavigate();
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     const inputValue = type === "checkbox" ? (checked ? "yes" : "no") : value;
@@ -37,37 +46,12 @@ const AddItem = () => {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    addToList();
     if (!validateForm()) {
       setMessage("required field missing");
       return;
     }
-
-    try {
-      const response = await axios.post(url, formData);
-
-      if (response.status === 201) {
-        setMessage("Item added successfully");
-        setFormData({
-          price: "",
-          bedrooms: "",
-          bathrooms: "",
-          size: "",
-          streetName: "",
-          houseNumber: "",
-          numberAddition: "",
-          zip: "",
-          city: "",
-          images: [],
-          constructionYear: "",
-          hasGarage: "no",
-          description: "",
-        });
-        setImageURLs([]);
-      }
-    } catch (error) {
-      console.log("Error adding item:", error);
-    }
+    navigate(`/${single_item.id}`);
   };
 
   const getFieldClassName = (fieldName) =>
@@ -238,7 +222,7 @@ const AddItem = () => {
               ></textarea>
             </label>
             <button type="submit">Send Post</button>
-            {message && <p className="error">{message}</p>}
+            {addMessage && <p className="message">{addMessage}</p>}
           </form>
         </div>
       </section>

@@ -4,12 +4,14 @@ import {} from "react-icons/fa";
 import { FaShower, FaBed, FaRuler, FaTrash, FaEdit } from "react-icons/fa";
 import { useListsContext } from "../context/lists_context";
 import { post_url as url } from "../utils/constants";
+import { ItemList, Loading, Error } from "../components";
 
 const ListView = ({ lists }) => {
   const {
     removeItem,
     lists_loading: loading,
     lists_error: error,
+    removeMessage,
   } = useListsContext();
 
   if (loading) {
@@ -20,7 +22,8 @@ const ListView = ({ lists }) => {
   }
 
   return (
-    <div>
+    <section className="lists">
+      {removeMessage && <p className="message">{removeMessage}</p>}
       {lists.map((item) => {
         const {
           id,
@@ -35,50 +38,48 @@ const ListView = ({ lists }) => {
           bathrooms,
         } = item;
         return (
-          <section className="lists">
-            <article className="single-list" key={id}>
-              <Link to={`/${id}`} className=" ">
-                <img src={image} />{" "}
-              </Link>
-              <div>
-                <h5>{street}</h5>
-                <p className="price">€{price}</p>
-                <p className="location">
-                  {zip} {city}
+          <article className="single-list" key={id}>
+            <Link to={`/${id}`} className=" ">
+              <img src={image} />{" "}
+            </Link>
+            <div>
+              <h5>{street}</h5>
+              <p className="price">€{price}</p>
+              <p className="location">
+                {zip} {city}
+              </p>
+              <div className="single-list-info">
+                <p>
+                  <FaBed />
+                  {bedrooms}{" "}
                 </p>
-                <div className="single-list-info">
-                  <p>
-                    <FaBed />
-                    {bedrooms}{" "}
-                  </p>
-                  <p>
-                    <FaShower />
-                    {bathrooms}
-                  </p>
-                  <p>
-                    <FaRuler />
-                    {size} m2
-                  </p>
-                </div>
+                <p>
+                  <FaShower />
+                  {bathrooms}
+                </p>
+                <p>
+                  <FaRuler />
+                  {size} m2
+                </p>
               </div>
-              <div className="single-list-modify">
-                <button
-                  type="button"
-                  className="remove-btn"
-                  onClick={() => {
-                    removeItem(id);
-                  }}
-                >
-                  {" "}
-                  <FaTrash />{" "}
-                </button>
-                <FaEdit />
-              </div>
-            </article>
-          </section>
+            </div>
+            <div className="single-list-modify">
+              <button
+                type="button"
+                className="remove-btn"
+                onClick={() => {
+                  removeItem(id);
+                }}
+              >
+                {" "}
+                <FaTrash />{" "}
+              </button>
+              <FaEdit />
+            </div>
+          </article>
         );
       })}
-    </div>
+    </section>
   );
 };
 

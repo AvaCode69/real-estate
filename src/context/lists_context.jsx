@@ -1,5 +1,12 @@
 import axios from "axios";
-import React, { useContext, useReducer, useEffect, useState } from "react";
+
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useReducer,
+  useState,
+} from "react";
 import reducer from "../reducers/lists_reducer";
 import { post_url as url } from "../utils/constants";
 import {
@@ -23,11 +30,17 @@ const initialState = {
   single_item_loading: false,
   single_item_error: false,
   single_item: {},
+  postId: "",
+  addMessage: "",
+  removeMessage: "",
 };
-const ListsContext = React.createContext(initialState);
+
+const ListsContext = createContext();
 
 export const ListsProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const [imageURLs, setImageURLs] = useState([]);
+
   const [formData, setFormData] = useState({
     price: "1500",
     bedrooms: "2",
@@ -48,6 +61,7 @@ export const ListsProvider = ({ children }) => {
   const openSidebar = () => {
     dispatch({ type: SIDEBAR_OPEN });
   };
+
   const closeSidebar = () => {
     dispatch({ type: SIDEBAR_CLOSE });
   };
@@ -63,7 +77,7 @@ export const ListsProvider = ({ children }) => {
     }
   };
 
-  const fetchLists = async (url) => {
+  const fetchLists = async () => {
     dispatch({ type: GET_LISTS_BEGIN });
 
     try {
@@ -77,6 +91,7 @@ export const ListsProvider = ({ children }) => {
       dispatch({ type: GET_LISTS_ERROR });
     }
   };
+
   const fetchSingleItem = async (url) => {
     dispatch({ type: GET_SINGLE_ITEM_BEGIN });
     const response = await axios.get(url);
@@ -85,6 +100,18 @@ export const ListsProvider = ({ children }) => {
     try {
       dispatch({ type: GET_SINGLE_ITEM_SUCCESS, payload: singleItem });
     } catch {
+      dispatch({ type: GET_SINGLE_ITEM_ERROR });
+    }
+  };
+  const addToList = async () => {
+    const response = await axios.post(url);
+
+    try {
+      dispatch({ type: ADD_TO_LIST, payload: response.data });
+      if (response.status === 201) {
+        fetchLists(url);
+      }
+    } catch (error) {
       dispatch({ type: GET_SINGLE_ITEM_ERROR });
     }
   };
@@ -102,6 +129,7 @@ export const ListsProvider = ({ children }) => {
       "city",
       "constructionYear",
       "description",
+      "images",
     ];
     const invalidFieldsList = [];
 
@@ -121,9 +149,15 @@ export const ListsProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    fetchLists(url);
+    fetchLists();
   }, []);
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      dispatch({ type: GET_LISTS_SUCCESS, payload: state.lists }); // Clear the message state
+    }, 2000);
 
+    return () => clearTimeout(timeout);
+  }, [state.lists]);
   return (
     <ListsContext.Provider
       value={{
@@ -137,12 +171,16 @@ export const ListsProvider = ({ children }) => {
         validateForm,
         formData,
         setFormData,
+        addToList,
+        imageURLs,
+        setImageURLs,
       }}
     >
       {children}
     </ListsContext.Provider>
   );
 };
+
 export const useListsContext = () => {
   return useContext(ListsContext);
 };

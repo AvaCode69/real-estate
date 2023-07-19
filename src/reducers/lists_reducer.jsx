@@ -5,6 +5,7 @@ import {
   GET_LISTS_BEGIN,
   GET_LISTS_SUCCESS,
   GET_LISTS_ERROR,
+  ADD_TO_LIST,
   REMOVE_LIST_ITEM,
   GET_SINGLE_ITEM_SUCCESS,
   GET_SINGLE_ITEM_ERROR,
@@ -22,7 +23,11 @@ const lists_reducer = (state, action) => {
     const newList = state.lists.filter((item) => item.id !== action.payload);
     console.log("Removing item with ID3:", newList);
 
-    return { ...state, lists: newList };
+    return {
+      ...state,
+      lists: newList,
+      removeMessage: "Item removed successfully",
+    };
   }
   if (action.type === GET_LISTS_BEGIN) {
     return { ...state, lists_loading: true };
@@ -32,6 +37,8 @@ const lists_reducer = (state, action) => {
       ...state,
       lists_loading: false,
       lists: action.payload,
+      removeMessage: " ",
+      addMessage: "",
     };
   }
   if (action.type === GET_LISTS_ERROR) {
@@ -56,6 +63,16 @@ const lists_reducer = (state, action) => {
   if (action.type === GET_SINGLE_ITEM_ERROR) {
     return { ...state, single_item_error: false, single_item_loading: true };
   }
+
+  if (action.type === ADD_TO_LIST) {
+    return {
+      ...state,
+      single_item_loading: true,
+      single_item: action.payload,
+      addMessage: "Item added successfully",
+    };
+  }
+
   throw new Error(`No Matching - action type`);
 };
 
