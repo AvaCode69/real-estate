@@ -20,6 +20,8 @@ import {
   GET_SINGLE_ITEM_SUCCESS,
   GET_SINGLE_ITEM_ERROR,
   GET_SINGLE_ITEM_BEGIN,
+  OPEN_MODAL,
+  CLOSE_MODAL,
 } from "../actions";
 
 const initialState = {
@@ -31,15 +33,16 @@ const initialState = {
   single_item_error: false,
   single_item: {},
   postId: "",
-  addMessage: "",
   removeMessage: "",
+  isOpen: false,
 };
 
 const ListsContext = createContext();
 
 export const ListsProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const [imageURLs, setImageURLs] = useState([]);
+  const [imageURL, setImageURL] = useState("");
+  const [addItemMessage, setAddItemMessage] = useState("");
 
   const [formData, setFormData] = useState({
     price: "1500",
@@ -51,7 +54,7 @@ export const ListsProvider = ({ children }) => {
     numberAddition: "56",
     zip: "1487TD",
     city: "Utrecht",
-    images: [],
+    image: "",
     constructionYear: "156",
     hasGarage: "no",
     description: "fddf mkkdmk kmkm kme mm",
@@ -64,6 +67,12 @@ export const ListsProvider = ({ children }) => {
 
   const closeSidebar = () => {
     dispatch({ type: SIDEBAR_CLOSE });
+  };
+  const openModal = () => {
+    dispatch({ type: OPEN_MODAL });
+  };
+  const closeModal = () => {
+    dispatch({ type: CLOSE_MODAL });
   };
 
   const removeItem = async (id) => {
@@ -105,11 +114,29 @@ export const ListsProvider = ({ children }) => {
   };
   const addToList = async () => {
     const response = await axios.post(url);
+    setAddItemMessage(" ");
 
     try {
       dispatch({ type: ADD_TO_LIST, payload: response.data });
       if (response.status === 201) {
+        // setAddItemMessage("Item added successfully");
         fetchLists(url);
+        setFormData({
+          price: "",
+          bedrooms: "",
+          bathrooms: "",
+          size: "",
+          streetName: "",
+          houseNumber: "",
+          numberAddition: "",
+          zip: "",
+          city: "",
+          image: "",
+          constructionYear: "",
+          hasGarage: "no",
+          description: "",
+        });
+        setImageURL("");
       }
     } catch (error) {
       dispatch({ type: GET_SINGLE_ITEM_ERROR });
@@ -129,7 +156,7 @@ export const ListsProvider = ({ children }) => {
       "city",
       "constructionYear",
       "description",
-      "images",
+      "image",
     ];
     const invalidFieldsList = [];
 
@@ -172,8 +199,12 @@ export const ListsProvider = ({ children }) => {
         formData,
         setFormData,
         addToList,
-        imageURLs,
-        setImageURLs,
+        imageURL,
+        setImageURL,
+        setAddItemMessage,
+        addItemMessage,
+        openModal,
+        closeModal,
       }}
     >
       {children}

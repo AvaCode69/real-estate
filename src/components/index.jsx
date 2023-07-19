@@ -6,6 +6,7 @@ import Loading from "./Loading";
 import Error from "./Error";
 import ItemList from "./ItemList";
 import PageHero from "./PageHero";
+import Modal from "./Modal";
 export {
   Navbar,
   Footer,
@@ -15,4 +16,5 @@ export {
   Error,
   ItemList,
   PageHero,
+  Modal,
 };

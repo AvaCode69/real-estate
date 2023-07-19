@@ -10,6 +10,8 @@ import {
   GET_SINGLE_ITEM_SUCCESS,
   GET_SINGLE_ITEM_ERROR,
   GET_SINGLE_ITEM_BEGIN,
+  OPEN_MODAL,
+  CLOSE_MODAL,
 } from "../actions";
 
 const lists_reducer = (state, action) => {
@@ -19,6 +21,13 @@ const lists_reducer = (state, action) => {
   if (action.type === SIDEBAR_CLOSE) {
     return { ...state, isSidebarOpen: false };
   }
+  if (action.type === OPEN_MODAL) {
+    return { ...state, isOpen: true };
+  }
+  if (action.type === CLOSE_MODAL) {
+    return { ...state, isOpen: false };
+  }
+
   if (action.type === REMOVE_LIST_ITEM) {
     const newList = state.lists.filter((item) => item.id !== action.payload);
     console.log("Removing item with ID3:", newList);
@@ -69,7 +78,6 @@ const lists_reducer = (state, action) => {
       ...state,
       single_item_loading: true,
       single_item: action.payload,
-      addMessage: "Item added successfully",
     };
   }
 

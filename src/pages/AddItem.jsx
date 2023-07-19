@@ -14,9 +14,10 @@ const AddItem = () => {
     invalidFields,
     fetchLists,
     addToList,
-    imageURLs,
-    setImageURLs,
-    addMessage,
+    imageURL,
+    setImageURL,
+    setAddItemMessage,
+    addItemMessage,
     single_item,
   } = useListsContext();
   const navigate = useNavigate();
@@ -31,27 +32,26 @@ const AddItem = () => {
   };
 
   const handleImageChange = (e) => {
-    const files = Array.from(e.target.files);
-    setFormData((prevData) => ({ ...prevData, images: files }));
+    const file = e.target.files[0];
+    setFormData((prevData) => ({ ...prevData, image: file }));
 
-    const urls = files.map((file) => URL.createObjectURL(file));
-    setImageURLs(urls);
+    const url = URL.createObjectURL(file);
+    setImageURL(url);
   };
-  const handleImageRemove = (index) => {
-    const updatedURLs = [...imageURLs];
 
-    updatedURLs.splice(index, 1);
-
-    setImageURLs(updatedURLs);
-  };
   const handleSubmit = async (e) => {
+    const { name } = e.target;
+
     e.preventDefault();
-    addToList();
+    setAddItemMessage("");
+
     if (!validateForm()) {
-      setMessage("required field missing");
+      setAddItemMessage("required field missing");
       return;
+    } else {
+      addToList();
+      navigate(`/${single_item.id}`);
     }
-    navigate(`/${single_item.id}`);
   };
 
   const getFieldClassName = (fieldName) =>
@@ -154,27 +154,28 @@ const AddItem = () => {
             </label>
             <label className="upload-label">
               Upload Images:
-              <div className="upload-container">
+              <div className={`upload-container ${getFieldClassName("image")}`}>
                 <div className="upload-preview">
-                  {imageURLs.length > 0 && (
+                  {imageURL && (
                     <div className="image-preview">
-                      {imageURLs.map((url, index) => (
-                        <div key={index} className="image-item">
-                          <img src={url} alt={`Image ${index + 1}`} />
-                          <button
-                            type="button"
-                            className="remove-image-btn"
-                            onClick={() => handleImageRemove(index)}
-                          >
-                            <FiX />
-                          </button>
-                        </div>
-                      ))}
+                      <div className="image-item">
+                        <img src={imageURL} alt="Image Preview" />
+                        <button
+                          type="button"
+                          className="remove-image-btn"
+                          onClick={() => {
+                            setImageURL("");
+                            formData.image = "";
+                          }}
+                        >
+                          <FiX />
+                        </button>
+                      </div>
                     </div>
                   )}
                   <input
                     type="file"
-                    name="images"
+                    name="image"
                     multiple
                     accept="image/jpeg, image/png"
                     onChange={handleImageChange}
@@ -183,7 +184,7 @@ const AddItem = () => {
 
                   <div
                     className={`upload-icon-container ${
-                      imageURLs.length > 0 ? "hidden" : ""
+                      imageURL.length > 0 ? "hidden" : ""
                     }`}
                   >
                     <FiPlus className="upload-icon" />
@@ -222,7 +223,7 @@ const AddItem = () => {
               ></textarea>
             </label>
             <button type="submit">Send Post</button>
-            {addMessage && <p className="message">{addMessage}</p>}
+            {addItemMessage && <p className="message">{addItemMessage}</p>}
           </form>
         </div>
       </section>

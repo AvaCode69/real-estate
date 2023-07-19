@@ -12,6 +12,7 @@ const ListView = ({ lists }) => {
     lists_loading: loading,
     lists_error: error,
     removeMessage,
+    openModal,
   } = useListsContext();
 
   if (loading) {
@@ -68,7 +69,7 @@ const ListView = ({ lists }) => {
                 type="button"
                 className="remove-btn"
                 onClick={() => {
-                  removeItem(id);
+                  openModal();
                 }}
               >
                 {" "}
