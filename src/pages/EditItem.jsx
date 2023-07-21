@@ -1,4 +1,5 @@
-import React, { useContext, useState } from "react";
+//EditItem.jsx
+import React, { useEffect } from "react";
 import axios from "axios";
 import { post_url as url } from "../utils/constants";
 import { useListsContext } from "../context/lists_context";
@@ -6,42 +7,51 @@ import { FiPlus, FiX } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { Loading } from "../components";
 
-const AddItem = () => {
+const EditItem = () => {
   const {
     setFormData,
     formData,
     validateForm,
     invalidFields,
-    fetchLists,
+    fetchSingleItem,
     addToList,
     imageURL,
     setImageURL,
     setAddItemMessage,
     addItemMessage,
     single_item,
+    edit_item,
   } = useListsContext();
+
+  const {
+    image,
+    price,
+    description,
+    size,
+    streetName,
+    houseNumber,
+    numberAddition,
+    hasGarage,
+    zip,
+    city,
+    bedrooms,
+    bathrooms,
+    constructionYear,
+  } = edit_item;
+
   const navigate = useNavigate();
 
+  useEffect(() => {
+    fetchSingleItem(`${url}/${single_item.id}`);
+  }, []);
+
   const handleChange = (e) => {
-    const { name, value, files } = e.target;
+    const { name, value } = e.target;
 
-    if (name === "image" && files.length > 0) {
-      const fileReader = new FileReader();
-      fileReader.readAsDataURL(files[0]);
-
-      fileReader.onload = (e) => {
-        const base64Image = e.target.result;
-        setFormData((prevData) => ({
-          ...prevData,
-          [name]: base64Image,
-        }));
-      };
-    } else {
-      setFormData((prevData) => ({
-        ...prevData,
-        [name]: value,
-      }));
-    }
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
   };
 
   const handleImageChange = (e) => {
@@ -53,17 +63,19 @@ const AddItem = () => {
   };
 
   const handleSubmit = async (e) => {
-    const { name } = e.target;
-
     e.preventDefault();
-    setAddItemMessage("");
-
     if (!validateForm()) {
-      setAddItemMessage("required field missing");
+      setAddItemMessage("Required field(s) missing");
       return;
-    } else {
-      addToList(formData);
-      navigate(`/${single_item.id}`);
+    }
+
+    try {
+      // Send the updated item data to the server using an HTTP PUT or PATCH request
+      await addToList(formData);
+      navigate(`/`);
+    } catch (error) {
+      // Handle any errors that occur during the update
+      console.error("Error updating item:", error);
     }
   };
 
@@ -79,7 +91,7 @@ const AddItem = () => {
             <input
               type="text"
               name="price"
-              value={formData.price}
+              value={price}
               onChange={handleChange}
               className={getFieldClassName("price")}
             />
@@ -89,7 +101,7 @@ const AddItem = () => {
             <input
               type="text"
               name="bedrooms"
-              value={formData.bedrooms}
+              value={bedrooms}
               onChange={handleChange}
               className={getFieldClassName("bedrooms")}
             />
@@ -99,7 +111,7 @@ const AddItem = () => {
             <input
               type="text"
               name="bathrooms"
-              value={formData.bathrooms}
+              value={bathrooms}
               onChange={handleChange}
               className={getFieldClassName("bathrooms")}
             />
@@ -109,7 +121,7 @@ const AddItem = () => {
             <input
               type="text"
               name="size"
-              value={formData.size}
+              value={size}
               onChange={handleChange}
               className={getFieldClassName("size")}
             />
@@ -119,7 +131,7 @@ const AddItem = () => {
             <input
               type="text"
               name="streetName"
-              value={formData.streetName}
+              value={streetName}
               onChange={handleChange}
               className={getFieldClassName("streetName")}
             />
@@ -129,7 +141,7 @@ const AddItem = () => {
             <input
               type="text"
               name="houseNumber"
-              value={formData.houseNumber}
+              value={houseNumber}
               onChange={handleChange}
               className={getFieldClassName("houseNumber")}
             />
@@ -139,7 +151,7 @@ const AddItem = () => {
             <input
               type="text"
               name="numberAddition"
-              value={formData.numberAddition}
+              value={numberAddition}
               onChange={handleChange}
               className={getFieldClassName("numberAddition")}
             />
@@ -149,7 +161,7 @@ const AddItem = () => {
             <input
               type="text"
               name="zip"
-              value={formData.zip}
+              value={zip}
               onChange={handleChange}
               className={getFieldClassName("zip")}
             />
@@ -159,7 +171,7 @@ const AddItem = () => {
             <input
               type="text"
               name="city"
-              value={formData.city}
+              value={city}
               onChange={handleChange}
               className={getFieldClassName("city")}
             />
@@ -212,18 +224,14 @@ const AddItem = () => {
             <input
               type="text"
               name="constructionYear"
-              value={formData.constructionYear}
+              value={constructionYear}
               onChange={handleChange}
               className={getFieldClassName("constructionYear")}
             />
           </label>
           <label>
             Has Garage:
-            <select
-              name="hasGarage"
-              value={formData.hasGarage}
-              onChange={handleChange}
-            >
+            <select name="hasGarage" value={hasGarage} onChange={handleChange}>
               <option value="no">No</option>
               <option value="yes">Yes</option>
             </select>
@@ -232,12 +240,12 @@ const AddItem = () => {
             Description:
             <textarea
               name="description"
-              value={formData.description}
+              value={description}
               onChange={handleChange}
               className={getFieldClassName("description")}
             ></textarea>
           </label>
-          <button type="submit">Send Post</button>
+          <button type="submit">update Post</button>
           {addItemMessage && <p className="message">{addItemMessage}</p>}
         </form>
       </div>
@@ -245,4 +253,4 @@ const AddItem = () => {
   );
 };
 
-export default AddItem;
+export default EditItem;

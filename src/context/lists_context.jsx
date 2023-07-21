@@ -1,3 +1,4 @@
+//lists_context.jsx
 import axios from "axios";
 
 import React, {
@@ -22,6 +23,7 @@ import {
   GET_SINGLE_ITEM_BEGIN,
   OPEN_MODAL,
   CLOSE_MODAL,
+  EDIT_ITEM,
 } from "../actions";
 
 const initialState = {
@@ -36,6 +38,7 @@ const initialState = {
   removeMessage: "",
   isOpen: false,
   modalItemId: null,
+  edit_item: {},
 };
 
 const ListsContext = createContext();
@@ -75,6 +78,9 @@ export const ListsProvider = ({ children }) => {
   const closeModal = () => {
     dispatch({ type: CLOSE_MODAL });
   };
+  const editItem = (id) => {
+    dispatch({ type: EDIT_ITEM, payload: id });
+  };
 
   const removeItem = async () => {
     const id = state.modalItemId;
@@ -97,6 +103,8 @@ export const ListsProvider = ({ children }) => {
         headers: { "content-type": "application/json" },
       });
       const lists = response.data;
+      console.log(lists);
+
       dispatch({ type: GET_LISTS_SUCCESS, payload: lists });
     } catch (error) {
       dispatch({ type: GET_LISTS_ERROR });
@@ -114,11 +122,21 @@ export const ListsProvider = ({ children }) => {
       dispatch({ type: GET_SINGLE_ITEM_ERROR });
     }
   };
-  const addToList = async () => {
-    const response = await axios.post(url);
-    setAddItemMessage(" ");
-
+  const updateList = async () => {
     try {
+      const response = await axios.put(`${url}/${house.id}`);
+      dispatch({ type: "UPDATE_HOUSE", payload: response.data });
+    } catch (error) {
+      console.error("Error updating house:", error);
+    }
+  };
+  const addToList = async (formData) => {
+    try {
+      const response = await axios.post(url, formData, {
+        headers: { "content-type": "application/json" },
+      });
+      setAddItemMessage("");
+
       dispatch({ type: ADD_TO_LIST, payload: response.data });
       if (response.status === 201) {
         // setAddItemMessage("Item added successfully");
@@ -207,6 +225,8 @@ export const ListsProvider = ({ children }) => {
         addItemMessage,
         openModal,
         closeModal,
+        editItem,
+        updateList,
       }}
     >
       {children}

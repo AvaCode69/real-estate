@@ -45,6 +45,7 @@ const SingleItemPage = () => {
     city,
     bedrooms,
     bathrooms,
+    constructionYear,
   } = item;
 
   return (
@@ -56,8 +57,17 @@ const SingleItemPage = () => {
         </Link>
         <img src={image} />
         <div className="product-center">
-          <p>{city}</p>
           <h2>{street}</h2>
+
+          <p>
+            {zip}
+            {city}
+          </p>
+          <p>{price}</p>
+          <p>{size}</p>
+          <p>built in {constructionYear}</p>
+
+          <p>{description}</p>
         </div>
       </div>
     </section>

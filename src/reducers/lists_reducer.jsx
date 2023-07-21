@@ -12,6 +12,8 @@ import {
   GET_SINGLE_ITEM_BEGIN,
   OPEN_MODAL,
   CLOSE_MODAL,
+  EDIT_ITEM,
+  UPDATE_ITEM,
 } from "../actions";
 
 const lists_reducer = (state, action) => {
@@ -80,7 +82,22 @@ const lists_reducer = (state, action) => {
       single_item: action.payload,
     };
   }
-
+  if (action.type === EDIT_ITEM) {
+    const editItem = state.lists.find((item) => item.id === action.payload);
+    return {
+      ...state,
+      edit_item: editItem, // Assign the editItem function to edit_item property
+    };
+  }
+  if (action.type === UPDATE_ITEM) {
+    const updatedHouses = state.lists.map((house) =>
+      house.id === action.payload.id ? action.payload : house
+    );
+    return {
+      ...state,
+      houses: updatedHouses,
+    };
+  }
   throw new Error(`No Matching - action type`);
 };
 

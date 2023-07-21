@@ -1,3 +1,5 @@
+//ListView.jsx;
+
 import React from "react";
 import { Link } from "react-router-dom";
 import {} from "react-icons/fa";
@@ -5,6 +7,7 @@ import { FaShower, FaBed, FaRuler, FaTrash, FaEdit } from "react-icons/fa";
 import { useListsContext } from "../context/lists_context";
 import { post_url as url } from "../utils/constants";
 import { ItemList, Loading, Error } from "../components";
+import { useNavigate } from "react-router-dom";
 
 const ListView = ({ lists }) => {
   const {
@@ -12,7 +15,14 @@ const ListView = ({ lists }) => {
     lists_error: error,
     removeMessage,
     openModal,
+    editItem,
+    single_item,
   } = useListsContext();
+  const navigate = useNavigate();
+
+  const redirectEdit = (id) => {
+    navigate(`/${id}`);
+  };
 
   if (loading) {
     return <Loading />;
@@ -74,7 +84,13 @@ const ListView = ({ lists }) => {
                 {" "}
                 <FaTrash />{" "}
               </button>
-              <FaEdit />
+              <Link
+                to={`/edit/${id}`}
+                className="edit-btn"
+                onClick={() => editItem(id)}
+              >
+                <FaEdit />
+              </Link>
             </div>
           </article>
         );

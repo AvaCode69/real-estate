@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Navbar, Sidebar, Footer } from "./components";
-import { Home, About, Error, AddItem, SingleItemPage } from "./pages";
+import { Home, About, Error, AddItem, SingleItemPage, EditItem } from "./pages";
 
 function App() {
   return (
@@ -12,7 +12,7 @@ function App() {
         <Route path="/about" element={<About />} />
         <Route path="/AddItem" element={<AddItem />} />
         <Route exact path="/:id" element={<SingleItemPage />} />
-
+        <Route exact path="/edit/:id" element={<EditItem />} />
         <Route path="/*" element={<Error />} />
       </Routes>
       <Footer />
